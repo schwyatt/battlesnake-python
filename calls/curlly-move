@@ -1,0 +1,7 @@
+curl localhost:8080/move -X POST -H "Content-Type: application/json" -d '{
+    "you": "my_id",
+    "turn": 0,
+    "width": 20,
+    "height": 20,
+    "game_id": "some-game"
+}'

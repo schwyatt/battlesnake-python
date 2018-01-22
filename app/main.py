@@ -2,11 +2,9 @@ import bottle
 import os
 import random
 
-
 @bottle.route('/static/<path:path>')
 def static(path):
     return bottle.static_file(path, root='static/')
-
 
 @bottle.post('/start')
 def start():
@@ -24,7 +22,7 @@ def start():
 
     return {
         'color': '#00FF00',
-        'taunt': '{} ({}x{})'.format(game_id, board_width, board_height),
+        'taunt': 'hissss...sss',
         'head_url': head_url,
         'name': 'battlesnake-python'
     }
