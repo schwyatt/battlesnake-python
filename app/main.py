@@ -6,6 +6,7 @@ import random
 def static(path):
     return bottle.static_file(path, root='static/')
 
+
 @bottle.post('/start')
 def start():
     data = bottle.request.json
@@ -18,26 +19,29 @@ def start():
         bottle.request.urlparts.netloc
     )
 
-    # TODO: Do things with data
-
     return {
         'color': '#00FF00',
         'taunt': 'hissss...sss',
         'head_url': head_url,
-        'name': 'battlesnake-python'
+        'name': 'our-snake',
+        'head_type': 'pixel',
+        'tail_type': 'pixel',
     }
+
+
+
+
 
 
 @bottle.post('/move')
 def move():
     data = bottle.request.json
 
-    # TODO: Do things with data
     directions = ['up', 'down', 'left', 'right']
 
     return {
         'move': random.choice(directions),
-        'taunt': 'battlesnake-python!'
+        'taunt': 'python!'
     }
 
 

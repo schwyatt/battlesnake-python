@@ -3,5 +3,11 @@ curl localhost:8080/move -X POST -H "Content-Type: application/json" -d '{
     "turn": 0,
     "width": 20,
     "height": 20,
-    "game_id": "some-game"
+    "game_id": "some-game",
+    "food": [
+	[0, 0]
+    ],
+    "coords": [
+	[1, 0]
+    ]
 }'
