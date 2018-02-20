@@ -54,8 +54,13 @@ class Grid:
                 print(cell.to_symbol(), end=" ")
             print("")
 
-    def placer(self, coordinates, obj, status=False):
-        self.coord[coordinates[0]][coordinates[1]].is_it[obj] = status
+    def placer(self, instance, obj, status=False):
+        if obj == 'food':
+            for i in range(len(instance)):
+                self.coord[instance[i].coord[0]][instance[i].coord[1]].is_it['food'] = status
+        else:
+            print('break')
+
         
 
 class Food:
@@ -64,7 +69,7 @@ class Food:
 
 class Snake:
     def __init__(self, prepend):
-        self.coord = [[prepend['body']['data'][i]['y'], prepend['body']['data'][i]['x']] for i in range(len(prepend['body']['data']))]
+        self.coord = [[prepend['body']['data'][j]['y'], prepend['body']['data'][j]['x']] for j in range(len(prepend['body']['data']))]
         self.length = prepend['length']
         # distance to food
         # distance to me
@@ -82,7 +87,8 @@ def move():
     food = [Food(data['food']['data'][i]) for i in range(len(data['food']['data']))]
     snakes = [Snake(data['snakes']['data'][i]) for i in range(len(data['snakes']['data']))]
 
-    grid.placer(food[0].coord, 'food', True)
+    grid.placer(food, 'food', True)
+    #grid.placer()
     grid.print()
 '''
     return {
