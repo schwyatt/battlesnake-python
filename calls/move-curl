@@ -26,12 +26,12 @@ curl localhost:8080/move -X POST -H "Content-Type: application/json" -d '{
 		},
 		{
 		  "object": "point",
-		  "x": 13,
+		  "x": 14,
 		  "y": 19
 		},
 		{
 		  "object": "point",
-		  "x": 13,
+		  "x": 15,
 		  "y": 19
 		}
 	      ],
