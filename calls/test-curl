@@ -1,21 +1,4 @@
 curl localhost:8080/move -X POST -H "Content-Type: application/json" -d '{
-   "food": {
-	"data": [
-	  {
-	    "object": "point",
-	    "x": 0,
-	    "y": 9
-	  }
-	],
-	"object": "list"
-  },
-
-  "turn": 0,
-  "width": 20,
-  "height": 20,
-  "id": 1,
-
-  "object": "world",
       "snakes": {
 	"data": [
 	  {
@@ -46,7 +29,6 @@ curl localhost:8080/move -X POST -H "Content-Type: application/json" -d '{
 	    "object": "snake",
 	    "taunt": "Gotta go fast"
 	  },
-
 	  {
 	    "body": {
 	      "data": [
@@ -77,34 +59,5 @@ curl localhost:8080/move -X POST -H "Content-Type: application/json" -d '{
 	  }
 	],
 	"object": "list"
-      },
-
-	"you": {
-	"body": {
-	  "data": [
-	    {
-	      "object": "point",
-	      "x": 8,
-	      "y": 15
-	    },
-	    {
-	      "object": "point",
-	      "x": 8,
-	      "y": 15
-	    },
-	    {
-	      "object": "point",
-	      "x": 8,
-	      "y": 15
-	    }
-	  ],
-	  "object": "list"
-	},
-	"health": 100,
-	"id": "48ca23a2-dde8-4d0f-b03a-61cc9780427e",
-	"length": 3,
-	"name": "Typescript Snake",
-	"object": "snake",
-	"taunt": ""
       }
 }'
