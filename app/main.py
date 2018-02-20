@@ -11,8 +11,8 @@ def static(path):
 def start():
     data = bottle.request.json
     game_id = data['game_id']
-    board_width = data['width']
-    board_height = data['height']
+    #board_width = data['width']
+    #board_height = data['height']
 
     head_url = '%s://%s/static/head.png' % (
         bottle.request.urlparts.scheme,
@@ -30,8 +30,16 @@ def start():
 
 
 
+class Food:
+    def __init__(self, prepend):
+        self.coord = [prepend['y'], prepend['x']]
 
-
+class Snake:
+    def __init__(self, prepend):
+        self.coord = [[prepend['body']['data'][i]['y'], prepend['body']['data'][i]['x']] for i in range(len(prepend['body']['data']))]
+        self.length = prepend['length']
+        # distance to apple
+        # distance to me
 
 @bottle.post('/move')
 def move():
@@ -39,11 +47,15 @@ def move():
 
     directions = ['up', 'down', 'left', 'right']
 
+    food = [Food(data['food']['data'][i]) for i in range(len(data['food']['data']))]
+    snakes = [Snake(data['snakes']['data'][i]) for i in range(len(data['snakes']['data']))]
+
+'''
     return {
         'move': random.choice(directions),
         'taunt': 'python!'
     }
-
+'''
 
 # Expose WSGI app (so gunicorn can find it)
 application = bottle.default_app()
