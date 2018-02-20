@@ -58,9 +58,13 @@ class Grid:
         if obj == 'food':
             for i in range(len(instance)):
                 self.coord[instance[i].coord[0]][instance[i].coord[1]].is_it['food'] = status
-        else:
-            print('break')
-
+        elif obj == 'snake':
+            for i in range(len(instance)):
+                for j in range(len(instance[i].coord)):
+                    if j == 0:
+                        self.coord[instance[i].coord[j][0]][instance[i].coord[j][1]].is_it['snakehead'] = status
+                    else:
+                        self.coord[instance[i].coord[j][0]][instance[i].coord[j][1]].is_it['snakebody'] = status
         
 
 class Food:
@@ -84,11 +88,11 @@ def move():
     directions = ['up', 'down', 'left', 'right']
     
     grid = Grid(data)
-    food = [Food(data['food']['data'][i]) for i in range(len(data['food']['data']))]
+    foods = [Food(data['food']['data'][i]) for i in range(len(data['food']['data']))]
     snakes = [Snake(data['snakes']['data'][i]) for i in range(len(data['snakes']['data']))]
 
-    grid.placer(food, 'food', True)
-    #grid.placer()
+    grid.placer(foods, 'food', True)
+    grid.placer(snakes, 'snake', True)
     grid.print()
 '''
     return {
