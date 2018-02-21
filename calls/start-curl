@@ -1,3 +1,0 @@
-curl localhost:8080/start -X POST -H "Content-Type: application/json" -d '{
-    "game_id": "some-game"
-}'
