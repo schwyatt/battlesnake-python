@@ -98,6 +98,7 @@ class Me:
         self.length = prepend['length']
         self.id = prepend['id']
 
+##########
 
 def distance(frm, to):
     dy = abs(to.coord[0] - frm.coord[0][0])
@@ -105,16 +106,25 @@ def distance(frm, to):
     return(sum([dy, dx]))
     
 
-def safe(agrid, snake):
-    direction = {
+def safe(agrid, snake, prepend):
+    old_direction = {
             'up': [snake.coord[0][0]-1, snake.coord[0][1]],
             'down': [snake.coord[0][0]+1, snake.coord[0][1]],
             'left': [snake.coord[0][0], snake.coord[0][1]-1],
             'right': [snake.coord[0][0], snake.coord[0][1]+1],
             } 
+
+    direction = {
+            key: [old_direction[key][0], old_direction[key][1]]
+            for key in old_direction
+            if 0 <= old_direction[key][0] < prepend['height']
+            and 0 <= old_direction[key][1] < prepend['width']
+            }
+
     space = [key for key in direction 
             if agrid.coord[direction[key][0]][direction[key][1]].is_it['snakebody'] == False 
-            and agrid.coord[direction[key][0]][direction[key][1]].is_it['snakenemy'] == False]
+            and agrid.coord[direction[key][0]][direction[key][1]].is_it['snakenemy'] == False
+            ]
     return(space)
     
 
@@ -156,7 +166,7 @@ def move():
     
 
     route = path(me, foods[0], grid)
-    empty = safe(grid, me)
+    empty = safe(grid, me, data)
 
     for item in route:
         if item in empty:
