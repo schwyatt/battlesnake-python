@@ -163,6 +163,7 @@ def move():
     grid.placer(enemy, 'enemy', True)
     grid.placer(me, 'me', True)
     grid.print()
+    print("Turn %s" % (data['turn']))
     
 
     route = path(me, foods[0], grid)
