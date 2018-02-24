@@ -176,8 +176,8 @@ def move():
     grid.print()
     
     # Route setter
-    route = path(me, foods[0], grid)
     empty = safe(grid, me, data)
+    route = path(me, foods[0], grid)
 
     for item in empty:
         if item in route:
