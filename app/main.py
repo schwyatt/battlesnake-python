@@ -10,6 +10,7 @@ def static(path):
 def start():
     data = bottle.request.json
     game_id = data['game_id']
+    print('game id: %s' % (game_id))
 
     head_url = '%s://%s/static/head.png' % (
         bottle.request.urlparts.scheme,
