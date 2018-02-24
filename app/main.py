@@ -62,7 +62,7 @@ class Grid:
                 print(cell.to_symbol(), end=" ")
             print("")
 
-    def placer(self, instance, obj): # maybe break into 3 separate functions?
+    def place(self, instance, obj): # maybe break into 3 separate functions?
         if obj == 'food':
             for i in range(len(instance)):
                 self.coord[instance[i].coord[0]][instance[i].coord[1]].is_food = True
@@ -170,9 +170,9 @@ def move():
     enemy = [Enemy(data['snakes']['data'][i]) for i in range(len(data['snakes']['data'])) if data['snakes']['data'][i]['id'] != me.id]
 
     # Grid for log purposes
-    grid.placer(foods, 'food')
-    grid.placer(enemy, 'enemy')
-    grid.placer(me, 'me')
+    grid.place(foods, 'food')
+    grid.place(enemy, 'enemy')
+    grid.place(me, 'me')
     grid.print()
     
     # Route setter
