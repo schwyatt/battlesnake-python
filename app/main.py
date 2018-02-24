@@ -114,24 +114,20 @@ def distance(frm, to):
     
 
 def safe(agrid, snake, prepend):
-    all_directions = {
+    directions = {
             'up': [snake.coord[0][0]-1, snake.coord[0][1]],
             'down': [snake.coord[0][0]+1, snake.coord[0][1]],
             'left': [snake.coord[0][0], snake.coord[0][1]-1],
             'right': [snake.coord[0][0], snake.coord[0][1]+1],
             } 
 
-    direction = {
-            key: [all_directions[key][0], all_directions[key][1]]
-            for key in all_directions
-            if 0 <= all_directions[key][0] < prepend['height']
-            and 0 <= all_directions[key][1] < prepend['width']
-            }
-
-    space = [key for key in direction 
-            if agrid.coord[direction[key][0]][direction[key][1]].is_snakebody == False 
-            and agrid.coord[direction[key][0]][direction[key][1]].is_snakenemy == False
+    space = [key for key in directions
+            if agrid.coord[directions[key][0]][directions[key][1]].is_snakebody == False 
+            and agrid.coord[directions[key][0]][directions[key][1]].is_snakenemy == False # Update this condition - set to two block buffer
+            and 0 <= directions[key][0] < prepend['height']
+            and 0 <= directions[key][1] < prepend['width']
             ]
+
     return(space)
     
 
@@ -176,20 +172,20 @@ def move():
     grid.print()
     
     # Route setter
-    empty = safe(grid, me, data)
+    safety = safe(grid, me, data)
     route = path(me, foods[0], grid)
 
-    for item in empty:
+    for item in safety:
         if item in route:
             output = item
             break
         else:
-            output = empty[-1]
+            output = safety[-1]
     
     # Info for current turn, for log purposes
     print("Turn: %s" % (data['turn']))
     print('route: %s' % (route))
-    print('empty: %s' % (empty))
+    print('safety: %s' % (safety))
     print('output: %s' % (output))
 
     return {
