@@ -168,10 +168,14 @@ def move():
 
     route = path(me, foods[0], grid)
     empty = safe(grid, me, data)
+    
+    print(route)
+    print(empty)
 
     for item in route:
         if item in empty:
             output = item
+            break
         else:
             output = empty[0]
 
