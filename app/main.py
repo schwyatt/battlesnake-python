@@ -163,14 +163,14 @@ def move():
     grid.placer(enemy, 'enemy', True)
     grid.placer(me, 'me', True)
     grid.print()
-    print("Turn %s" % (data['turn']))
+    print("Turn: %s" % (data['turn']))
     
 
     route = path(me, foods[0], grid)
     empty = safe(grid, me, data)
     
-    print(route)
-    print(empty)
+    print('route: %s' % (route))
+    print('empty: %s' % (empty))
 
     for item in route:
         if item in empty:
@@ -178,6 +178,8 @@ def move():
             break
         else:
             output = empty[0]
+    
+    print('output: %s' % (output))
 
     return {
         'move': output,
