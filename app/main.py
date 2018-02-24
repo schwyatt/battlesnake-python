@@ -10,7 +10,7 @@ def static(path):
 def start():
     data = bottle.request.json
     game_id = data['game_id']
-    print('game id: %s' % (game_id))
+    print('game id: %s' % (game_id)) # For log purposes, to indicate which game log is showing.
 
     head_url = '%s://%s/static/head.png' % (
         bottle.request.urlparts.scheme,
@@ -27,22 +27,26 @@ def start():
     }
 
 
-##############
+################################################################################
+
 
 class Cell:
     def __init__(self, row, column):
-        self.is_it = {'snakehead': False, 'snakenemy': False, 'snakebody': False, 'food': False}
+        self.is_snakehead = False
+        self.is_snakenemy = False # head of enemy snake(s)
+        self.is_snakebody = False
+        self.is_food = False
         self.coord = (row, column)
         self.symbol = {'snakehead': 's', 'snakenemy': 'e', 'snakebody': 'b', 'food': 'f', 'cell': '_'}
     
     def to_symbol(self):
-        if self.is_it['snakehead'] == True:
+        if self.is_snakehead == True:
             return(self.symbol['snakehead'])
-        if self.is_it['snakenemy'] == True:
+        elif self.is_snakenemy == True:
             return(self.symbol['snakenemy'])
-        elif self.is_it['food'] == True:
+        elif self.is_food == True:
             return(self.symbol['food'])
-        elif self.is_it['snakebody'] == True:
+        elif self.is_snakebody == True:
             return(self.symbol['snakebody'])
         else:
             return(self.symbol['cell'])
@@ -58,23 +62,23 @@ class Grid:
                 print(cell.to_symbol(), end=" ")
             print("")
 
-    def placer(self, instance, obj, status=False):
+    def placer(self, instance, obj): # maybe break into 3 separate functions?
         if obj == 'food':
             for i in range(len(instance)):
-                self.coord[instance[i].coord[0]][instance[i].coord[1]].is_it['food'] = status
+                self.coord[instance[i].coord[0]][instance[i].coord[1]].is_food = True
         elif obj == 'enemy':
             for i in range(len(instance)):
                 for j in range(len(instance[i].coord)):
                     if j == 0:
-                        self.coord[instance[i].coord[j][0]][instance[i].coord[j][1]].is_it['snakenemy'] = status
+                        self.coord[instance[i].coord[j][0]][instance[i].coord[j][1]].is_snakenemy = True
                     else:
-                        self.coord[instance[i].coord[j][0]][instance[i].coord[j][1]].is_it['snakebody'] = status
+                        self.coord[instance[i].coord[j][0]][instance[i].coord[j][1]].is_snakebody = True
         elif obj == 'me':
             for j in range(len(instance.coord)):
                 if j == 0:
-                    self.coord[instance.coord[j][0]][instance.coord[j][1]].is_it['snakehead'] = status
+                    self.coord[instance.coord[j][0]][instance.coord[j][1]].is_snakehead = True
                 else:
-                    self.coord[instance.coord[j][0]][instance.coord[j][1]].is_it['snakebody'] = status
+                    self.coord[instance.coord[j][0]][instance.coord[j][1]].is_snakebody = True
                  
 
 class Food:
@@ -99,7 +103,9 @@ class Me:
         self.length = prepend['length']
         self.id = prepend['id']
 
-##########
+
+################################################################################
+
 
 def distance(frm, to):
     dy = abs(to.coord[0] - frm.coord[0][0])
@@ -108,7 +114,7 @@ def distance(frm, to):
     
 
 def safe(agrid, snake, prepend):
-    old_direction = {
+    all_directions = {
             'up': [snake.coord[0][0]-1, snake.coord[0][1]],
             'down': [snake.coord[0][0]+1, snake.coord[0][1]],
             'left': [snake.coord[0][0], snake.coord[0][1]-1],
@@ -116,15 +122,15 @@ def safe(agrid, snake, prepend):
             } 
 
     direction = {
-            key: [old_direction[key][0], old_direction[key][1]]
-            for key in old_direction
-            if 0 <= old_direction[key][0] < prepend['height']
-            and 0 <= old_direction[key][1] < prepend['width']
+            key: [all_directions[key][0], all_directions[key][1]]
+            for key in all_directions
+            if 0 <= all_directions[key][0] < prepend['height']
+            and 0 <= all_directions[key][1] < prepend['width']
             }
 
     space = [key for key in direction 
-            if agrid.coord[direction[key][0]][direction[key][1]].is_it['snakebody'] == False 
-            and agrid.coord[direction[key][0]][direction[key][1]].is_it['snakenemy'] == False
+            if agrid.coord[direction[key][0]][direction[key][1]].is_snakebody == False 
+            and agrid.coord[direction[key][0]][direction[key][1]].is_snakenemy == False
             ]
     return(space)
     
@@ -146,10 +152,13 @@ def path(frm, to, agrid):
 
     return(possible)
 
-#########
+
+###############################################################################
+
 
 @bottle.post('/move')
 def move():
+    # Initialise board and stuff on board
     data = bottle.request.json
 
     grid = Grid(data)
@@ -160,18 +169,15 @@ def move():
 
     enemy = [Enemy(data['snakes']['data'][i]) for i in range(len(data['snakes']['data'])) if data['snakes']['data'][i]['id'] != me.id]
 
-    grid.placer(foods, 'food', True)
-    grid.placer(enemy, 'enemy', True)
-    grid.placer(me, 'me', True)
+    # Grid for log purposes
+    grid.placer(foods, 'food')
+    grid.placer(enemy, 'enemy')
+    grid.placer(me, 'me')
     grid.print()
-    print("Turn: %s" % (data['turn']))
     
-
+    # Route setter
     route = path(me, foods[0], grid)
     empty = safe(grid, me, data)
-    
-    print('route: %s' % (route))
-    print('empty: %s' % (empty))
 
     for item in route:
         if item in empty:
@@ -180,12 +186,18 @@ def move():
         else:
             output = empty[0]
     
+    # Info for current turn, for log purposes
+    print("Turn: %s" % (data['turn']))
+    print('route: %s' % (route))
+    print('empty: %s' % (empty))
     print('output: %s' % (output))
 
     return {
         'move': output,
         'taunt': 'python!'
     }
+
+
 
 # Expose WSGI app (so gunicorn can find it)
 application = bottle.default_app()
