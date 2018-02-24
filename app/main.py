@@ -179,12 +179,12 @@ def move():
     route = path(me, foods[0], grid)
     empty = safe(grid, me, data)
 
-    for item in route:
-        if item in empty:
+    for item in empty:
+        if item in route:
             output = item
             break
         else:
-            output = empty[0]
+            output = empty[-1]
     
     # Info for current turn, for log purposes
     print("Turn: %s" % (data['turn']))
