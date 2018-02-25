@@ -35,9 +35,10 @@ class Cell:
         self.is_snakehead = False
         self.is_snakenemy = False # head of enemy snake(s)
         self.is_snakebody = False
+        self.is_snaketail = False
         self.is_food = False
         self.coord = (row, column)
-        self.symbol = {'snakehead': 's', 'snakenemy': 'e', 'snakebody': 'b', 'food': 'f', 'cell': '_'}
+        self.symbol = {'snakehead': 's', 'snakenemy': 'e', 'snakebody': 'b', 'snaketail': 't', 'food': 'f', 'cell': '_'}
     
     def to_symbol(self):
         if self.is_snakehead == True:
@@ -48,6 +49,8 @@ class Cell:
             return(self.symbol['food'])
         elif self.is_snakebody == True:
             return(self.symbol['snakebody'])
+        elif self.is_snaketail == True:
+            return(self.symbol['snaketail'])
         else:
             return(self.symbol['cell'])
 
@@ -71,12 +74,16 @@ class Grid:
                 for j in range(len(instance[i].coord)):
                     if j == 0:
                         self.coord[instance[i].coord[j][0]][instance[i].coord[j][1]].is_snakenemy = True
+                    elif j == len(instance[i].coord)-1:
+                        self.coord[instance[i].coord[j][0]][instance[i].coord[j][1]].is_snaketail = True
                     else:
                         self.coord[instance[i].coord[j][0]][instance[i].coord[j][1]].is_snakebody = True
         elif obj == 'me':
             for j in range(len(instance.coord)):
                 if j == 0:
                     self.coord[instance.coord[j][0]][instance.coord[j][1]].is_snakehead = True
+                elif j == len(instance.coord)-1:
+                    self.coord[instance.coord[j][0]][instance.coord[j][1]].is_snaketail = True
                 else:
                     self.coord[instance.coord[j][0]][instance.coord[j][1]].is_snakebody = True
                  
@@ -187,6 +194,8 @@ def move():
     print('route: %s' % (route))
     print('safety: %s' % (safety))
     print('output: %s' % (output))
+    print('Tail: %s' % grid.coord[15][13].is_snaketail)
+    print('Body: %s' % grid.coord[15][13].is_snakebody)
 
     return {
         'move': output,
