@@ -194,8 +194,6 @@ def move():
     print('route: %s' % (route))
     print('safety: %s' % (safety))
     print('output: %s' % (output))
-    print('Tail: %s' % grid.coord[15][13].is_snaketail)
-    print('Body: %s' % grid.coord[15][13].is_snakebody)
 
     return {
         'move': output,
