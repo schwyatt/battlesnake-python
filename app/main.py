@@ -122,10 +122,10 @@ def safe(agrid, snake, prepend):
             } 
 
     space = [key for key in directions
-            if agrid.coord[directions[key][0]][directions[key][1]].is_snakebody == False 
-            and agrid.coord[directions[key][0]][directions[key][1]].is_snakenemy == False # Update this condition - set to two block buffer
-            and 0 <= directions[key][0] < prepend['height']
+            if 0 <= directions[key][0] < prepend['height']
             and 0 <= directions[key][1] < prepend['width']
+            and agrid.coord[directions[key][0]][directions[key][1]].is_snakebody == False 
+            and agrid.coord[directions[key][0]][directions[key][1]].is_snakenemy == False # Update this condition - set to two block buffer
             ]
 
     return(space)
