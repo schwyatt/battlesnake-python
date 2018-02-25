@@ -98,6 +98,7 @@ class Enemy:
     def __init__(self, prepend):
         self.coord = [[prepend['body']['data'][j]['y'], prepend['body']['data'][j]['x']] for j in range(len(prepend['body']['data']))]
         self.length = prepend['length']
+        self.tail = prepend['body(length-1)'] #should just be the last coordinates (point) in the list (body) - Im assuming this is the tail. But my syntax is not great, is this correct? 
         self.id = prepend['id']
         # distance to food
         # distance to me
@@ -119,7 +120,7 @@ def distance(frm, to):
     dx = abs(to.coord[1] - frm.coord[0][1])
     return(sum([dy, dx]))
     
-
+    
 def safe(agrid, snake, prepend):
     directions = {
             'up': [snake.coord[0][0]-1, snake.coord[0][1]],
@@ -169,9 +170,15 @@ def move():
 
     foods = [Food(data['food']['data'][i], me) for i in range(len(data['food']['data']))]
     foods.sort(key = lambda food: food.distance)
-
+    
     enemy = [Enemy(data['snakes']['data'][i]) for i in range(len(data['snakes']['data'])) if data['snakes']['data'][i]['id'] != me.id]
 
+    
+    # Goal is to create a list of tails on board, and sort by distance to our snake, including our own.
+    tails = [Enemy(data['snakes']['data'][i], me).tail for i in range(len(data['enemy']['data']))]
+    #sort tails
+    
+    
     # Grid for log purposes
     grid.place(foods, 'food')
     grid.place(enemy, 'enemy')
@@ -181,11 +188,15 @@ def move():
     # Route setter
     safety = safe(grid, me, data)
     route = path(me, foods[0], grid)
+    routeTail = path(me, tails[0], grid) # Modeled after Dennis' path finding for food, but replaces - hopefully - with tails.
 
     for item in safety:
         if item in route:
             output = item
             break
+        elif item in routeTail: # This way food is primary concern, tails secondary. Might consider changing this so that tails are primary until HP threshold reached, then foods primary.
+            output = item
+            break # don't know what this means, but syntax seems to suggest it goes here
         else:
             output = safety[-1]
     
